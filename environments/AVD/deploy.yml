@@ -1,0 +1,82 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - environments/AVD/*
+
+name: Deploy Azure Virtual Desktop Management Plane
+
+variables:
+  - group: GlobalDevOpsVariables
+  - name: vmImageName
+    value: 'ubuntu-latest'
+  - name: azureServiceConnection
+    value:  'AzDevsopServiceConnectionAVD'
+  - name: resourceGroupName
+    value: 'AzureVirtualDesktop'
+  - name: location
+    value: 'westeurope'
+  - name: templateFile
+    value: './environments/AVD/main.bicep'  
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+
+- stage: Lint
+  jobs: 
+  - job: Lint
+    steps:
+      - script: |
+          az bicep build --file $(templateFile)
+
+- stage: CreateResourceGroup
+  jobs:
+  - job: CreateResourceGroup
+    steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az --version
+            az group create --name $(resourceGroupName) --location $(location)
+
+- stage: Validate
+  jobs:  
+  - job: Validate
+    steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az deployment sub validate \
+            --location $(location) \
+            --template-file $(templateFile) \
+            --parameters AVDResourceGroup=$(resourceGroupName)
+
+- stage: Deploy
+  jobs:  
+  - job: Deploy
+    steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(azureServiceConnection)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az --version
+            az deployment sub create \
+            --location $(location) \
+            --template-file $(templateFile) \
+            --parameters AVDResourceGroup=$(resourceGroupName)
+
+
+
+
