@@ -1,14 +1,9 @@
 targetScope = 'subscription'
 
-param AVDResourceGroup string
+param AVDResourceGroup string = 'rg-infra-avd-management-plane'
 
 
-param nameprefix string = 'we'
 param location string = 'westeurope'
-param laname string = 'mattloganalytics'
-param retentionInDays int = 90
-param capacityReservation int = 100
-param workspaceCapping int = 5
 
 @description('Expiration time for the HostPool registration token. This must be up to 30 days from todays date.')
 param baseTime string = utcNow('u')
@@ -22,13 +17,13 @@ param newBuild bool = true
   'Pooled'
 ])
 param hostPoolType string = 'Pooled'
-param hostPoolName string = 'Matt-HostPool'
+param hostPoolName string = 'Light-HostPool'
 
 @allowed([
   'Automatic'
   'Direct'
 ])
-param personalDesktopAssignmentType string = 'Direct'
+param personalDesktopAssignmentType string = 'Automatic'
 param maxSessionLimit int = 12
 
 
