@@ -1,0 +1,28 @@
+
+
+
+ {
+    "apiVersion": "2018-10-01",
+    "type": "Microsoft.Compute/virtualMachines/extensions",
+    "name": "[concat(parameters('deploymentParameters').vmPrefix, copyIndex(), '-VM', '/', 'dscextension')]",
+    "location": "[parameters('deploymentParameters').location]",
+    "dependsOn": [ "rdsh-domain-join-loop" ],
+    "copy": {
+        "name": "rdsh-dsc-loop",
+        "count": "[parameters('deploymentParameters').count]"
+    },
+    "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.73",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+            "modulesUrl": "[parameters('deploymentParameters').dscArtifactsLocation]",
+            "configurationFunction": "Configuration.ps1\\AddSessionHost",
+            "properties": {
+                "hostPoolName": "[parameters('deploymentParameters').hostPoolName]",
+                "registrationInfoToken": "[parameters('deploymentParameters').registrationInfoToken]"
+            }
+        }
+    }
+}
