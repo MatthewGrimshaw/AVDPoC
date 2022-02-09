@@ -19,22 +19,22 @@ param tokenExpirationTime string
   'Personal'
   'Pooled'
 ])
-param hostPoolType string = 'Pooled'
+param hostPoolType string
 param hostPoolName string
 
 @allowed([
   'Automatic'
   'Direct'
 ])
-param personalDesktopAssignmentType string = 'Direct'
-param maxSessionLimit int = 12
+param personalDesktopAssignmentType string
+param maxSessionLimit int
 
 @allowed([
   'BreadthFirst'
   'DepthFirst'
   'Persistent'
 ])
-param loadBalancerType string = 'BreadthFirst'
+param loadBalancerType string
 
 @description('Custom RDP properties to be applied to the AVD Host Pool.')
 param customRdpProperty string
@@ -43,7 +43,7 @@ param customRdpProperty string
 param hostPoolFriendlyName string
 
 @description('Name of the AVD Workspace to used for this deployment')
-param workspaceName string = 'ABRI-AVD-PROD'
+param workspaceName string
 param appGroupFriendlyName string
 
 

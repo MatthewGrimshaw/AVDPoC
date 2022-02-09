@@ -38,24 +38,11 @@ param loadBalancerType string = 'BreadthFirst'
 param customRdpProperty string = 'audiocapturemode:i:1;camerastoredirect:s:*;audiomode:i:0;drivestoredirect:s:;redirectclipboard:i:1;redirectcomports:i:0;redirectprinters:i:1;redirectsmartcards:i:1;screen mode id:i:2;devicestoredirect:s:*'
 
 @description('Friendly Name of the Host Pool, this is visible via the AVD client')
-param hostPoolFriendlyName string = 'Matt-HostPool'
+param hostPoolFriendlyName string = 'Light-HostPool'
 
 @description('Name of the AVD Workspace to used for this deployment')
-param workspaceName string = 'Matt-Workspace'
-param appGroupFriendlyName string = 'Matt-AppGroup'
-
-module laworkspace '../../Infrastructure/Bicep/LogAnalytics.bicep' = {
-  name: 'Matt-management-laworkspace-deployment'
-  scope: resourceGroup(AVDResourceGroup)
-  params:{
-    nameprefix: nameprefix
-    location: location
-    laname: laname
-    retentionInDays: retentionInDays
-    capacityReservation: capacityReservation
-    workspaceCapping: workspaceCapping
-  }
-}
+param workspaceName string = 'Light-Workspace'
+param appGroupFriendlyName string = 'Light-AppGroup'
 
 module backPlane '../../Infrastructure/Bicep/AVDManagementPlane.bicep' = {
   name: 'backPlane'
