@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "domainUsername": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+        },
+        "secretName": "Deploy-domainjoin"
+      }
+    },
+    "DomainPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+        },
+        "secretName": "Deploy-domainjoinPass"
+      }
+    },
+    "AdminUsername": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+        },
+        "secretName": "Deploy-LocalAdmin"
+      }
+    },
+    "AdminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+        },
+        "secretName": "Deploy-LocalAdminPass"
+      }
+    },
+    "WorkSpaceKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+        },
+        "secretName": "INFRAMON-OMSWorkspaceKey"
+      }
+    },
+    "CustomScriptStorageAccountKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+        },
+        "secretName": "ADO-WinCustomScriptKey"
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - deployment: Deploy
+        environment: dev
+        displayName: Deploy
+        pool:
+          vmImage: ubuntu-latest
+
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: Deploy VM
+                  inputs:
+                    deploymentScope: Resource Group
+                    azureResourceManagerConnection: $(azureResourceManagerConnection)
+                    subscriptionId: $(subscriptionId)
+                    action: Create Or Update Resource Group
+                    resourceGroupName: $(rgName)
+                    location: $(location)
+                    templateLocation: Linked artifact
+                    csmFile: $(Pipeline.Workspace)/drop/infrastructure/template.json
+                    csmParametersFile: $(Pipeline.Workspace)/drop/infrastructure/parameters.json
+                    overrideParameters: -ServerName "$(serverName)"
+                      -OperatingSystem "$(operatingSystem)"
+                      -Size "$(size)"
+                      -vNetRgName "$(vNetRgName)"
+                      -vNet "$(vNet)"
+                      -Subnet "$(subnet)"
+                      -AvailabilityZone "$(availabilityZone)"
+                    deploymentMode: Incremental

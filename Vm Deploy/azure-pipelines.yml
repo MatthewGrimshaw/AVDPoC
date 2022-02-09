@@ -1,0 +1,101 @@
+trigger: none
+
+parameters:
+  - name: subscriptionId
+    displayName: ID of the subscription to deploy in
+    type: string
+    default: 758c2304-30f5-4008-bd28-9c4b92963c3b
+
+  - name: rgName
+    displayName: Name of the Resource Group to deploy to
+    type: string
+
+  - name: serverName
+    displayName: "Type a name for your Virtual Machine following our standard: 'ServerName' + 'Numerator(2)'"
+    type: string
+
+  - name: operatingSystem
+    displayName: Select OS for your Virtual Machine
+    type: string
+    default: Windows Server 2019
+    values:
+      - "Windows Server 2019"
+      - "Windows Server 2016"
+      - "Windows 10 Enterprise"
+      - "Windows 10 Enterprise Multi-Session"
+      # - "Windows Server 2019 Data Science Virtual Machine"
+      - "Windows Server 2022 Gen2"
+
+  - name: size
+    displayName: Select a Size for your Virtual Machine
+    type: string
+    default: 2vCPU
+    values:
+      - 2vCPU
+      - 4vCPU
+      - 8vCPU
+      - FX12mds
+
+  - name: vNetRgName
+    displayName: Name of the Connectivity Resource Group
+    type: string
+
+  - name: vNet
+    displayName: Select the name of the VNet you wish to use
+    type: string
+    default: Internal-CCTA
+
+  - name: subnet
+    displayName: Type the name of the Subnet you wish to use
+    default: Internal-CCTA-NonProd-InfraPipelines
+    type: string
+
+  - name: availabilityZone
+    displayName: Select Availability Zone for your VM
+    type: string
+    default: "1"
+    values:
+      - "1"
+      - "2"
+      - "3"
+
+variables:
+  # General variables
+  - name: location
+    value: West Europe
+
+  - name: azureResourceManagerConnection
+    value: LandingZones/Virtual Machine Creator
+
+  # Parameter variables
+  - name: subscriptionId
+    value: ${{parameters.subscriptionId}}
+
+  - name: rgName
+    value: ${{parameters.rgName}}
+
+  - name: serverName
+    value: ${{parameters.serverName}}
+
+  - name: operatingSystem
+    value: ${{parameters.operatingSystem}}
+
+  - name: size
+    value: ${{parameters.size}}
+
+  - name: vNetRgName
+    value: ${{parameters.vNetRgName}}
+
+  - name: vNet
+    value: ${{parameters.vNet}}
+
+  - name: subnet
+    value: ${{parameters.subnet}}
+
+  - name: availabilityZone
+    value: ${{parameters.availabilityZone}}
+
+stages:
+  - template: stages/azure-build.yml
+
+  - template: stages/azure-deploy.yml

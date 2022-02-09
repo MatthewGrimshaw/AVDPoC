@@ -1,0 +1,271 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ServerName": {
+      "type": "string",
+      "maxLength": 15,
+      "minLength": 5,
+      "metadata": {
+        "description": "Type a name for your Virtual Machine following our standard: 'ServerName' + 'Numerator(2)'"
+      }
+    },
+    "OperatingSystem": {
+      "type": "string",
+      "defaultValue": "Windows Server 2019",
+      "allowedValues": [
+        "Windows Server 2019",
+        "Windows Server 2016",
+        "Windows 10 Enterprise",
+        "Windows 10 Enterprise Multi-Session",
+        "Windows Server 2022 Gen2"
+      ],
+      "metadata": {
+        "description": "Select OS for your Virtual Machine"
+      }
+    },
+    "Size": {
+      "type": "string",
+      "defaultValue": "2vCPU",
+      "allowedValues": [ "2vCPU", "4vCPU", "8vCPU", "FX12mds" ],
+      "metadata": {
+        "description": "Select a Size for your Virtual Machine"
+      }
+    },
+    "vNetRgName": {
+      "type": "string"
+    },
+    "vNet": {
+      "type": "string",
+      "defaultValue": "VNet-",
+      "metadata": {
+        "description": "Select the name of the VNet you wish to use"
+      }
+    },
+    "Subnet": {
+      "type": "string",
+      "metadata": {
+        "description": "Type the name of the Subnet you wish to use"
+      }
+    },
+    "AvailabilityZone": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": {
+        "description": "Select Availability Zone for your VM"
+      }
+    },
+    "DomainUsername": {
+      "type": "securestring"
+    },
+    "DomainPassword": {
+      "type": "securestring"
+    },
+    "AdminUsername": {
+      "type": "securestring"
+    },
+    "AdminPassword": {
+      "type": "securestring"
+    },
+    "WorkSpaceKey": {
+      "type": "securestring"
+    },
+    "CustomScriptStorageAccountKey": {
+      "type": "securestring"
+    }
+  },
+  "variables": {
+    "imageType": {
+      "Windows Server 2019": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2019-datacenter-gensecond",
+        "version": "latest"
+      },
+      "Windows Server 2016": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2016-Datacenter",
+        "version": "latest"
+      },
+      "Windows 10 Enterprise": {
+        "publisher": "MicrosoftWindowsDesktop",
+        "offer": "Windows-10",
+        "sku": "21h1-ent-g2",
+        "version": "latest"
+      },
+      "Windows 10 Enterprise Multi-Session": {
+        "publisher": "MicrosoftWindowsDesktop",
+        "offer": "Windows-10",
+        "sku": "21h1-evd-g2",
+        "version": "latest"
+      },
+      // "Windows Server 2019 Data Science Virtual Machine": {
+      //   "publisher": "microsoft-dsvm",
+      //   "offer": "dsvm-win-2019",
+      //   "sku": "server-2019",
+      //   "version": "latest"
+      // },
+      "Windows Server 2022 Gen2": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2022-datacenter-azure-edition",
+        "version": "latest"
+      }
+    },
+    "licenseType": {
+      "Windows Server 2019": "Windows_Server",
+      "Windows Server 2016": "Windows_Server",
+      "Windows 10 Enterprise": "Windows_Client",
+      "Windows 10 Enterprise Multi-Session": "Windows_Client",
+      // "Windows Server 2019 Data Science Virtual Machine": "Windows_Server",
+      "Windows Server 2022 Gen2": "Windows_Server"
+    },
+    "vmSize": {
+      "2vCPU": "Standard_D2s_v3",
+      "4vCPU": "Standard_D4s_v3",
+      "8vCPU": "Standard_D8s_v3",
+      "FX12mds": "Standard_FX12mds"
+    },
+    "enableAcceleratedNetworking": "[not(equals(parameters('Size'), '2vCPU'))]",
+    "subnetRef": "[resourceId(parameters('vNetRgName'), 'Microsoft.Network/virtualNetworks/subnets', parameters('VNet'), parameters('Subnet'))]",
+    "networkInterfaceName": "[concat(parameters('ServerName'), '-nic')]",
+    "JoinDomain": "JoinDomain",
+    "Domain": "CCTA.dk",
+    "OUpath": "OU=Azure,OU=Infrastruktur,OU=Servere,DC=ccta,DC=dk",
+    "CustomScript": "CustomScript",
+    "CustomScriptUri": "https://staiacscript.blob.core.windows.net/internal-ccta/PostInstallScript.ps1",
+    "location": "westeurope"
+  },
+  "resources": [
+    {
+      "name": "[parameters('ServerName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2020-06-01",
+      "location": "[variables('location')]",
+      "tags": {
+        "Image": "[parameters('OperatingSystem')]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('networkInterfaceName'))]"
+      ],
+      "zones": [ "[parameters('AvailabilityZone')]" ],
+      "properties": {
+        "osProfile": {
+          "computerName": "[parameters('ServerName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "windowsConfiguration": {
+            "provisionVmAgent": true,
+            "enableAutomaticUpdates": true,
+            "timeZone": "Romance Standard Time"
+          }
+        },
+        "hardwareProfile": {
+          "VMSize": "[variables('vmSize')[parameters('Size')]]"
+        },
+        "storageProfile": {
+          "imageReference": "[variables('imageType')[parameters('OperatingSystem')]]",
+          "osDisk": {
+            "osType": "Windows",
+            "name": "[concat(parameters('ServerName'), '_OsDisk')]",
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "Premium_LRS"
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            }
+          ]
+        },
+        "licenseType": "[variables('licenseType')[parameters('OperatingSystem')]]",
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true
+          }
+        }
+      }
+    },
+    {
+      "name": "[variables('networkInterfaceName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2019-04-01",
+      "location": "[variables('location')]",
+      "dependsOn": [],
+      "properties": {
+        "enableAcceleratedNetworking": "[variables('enableAcceleratedNetworking')]",
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "applicationSecurityGroups": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2019-03-01",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('ServerName'),'/', variables('JoinDomain'))]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('ServerName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "JsonADDomainExtension",
+        "typeHandlerVersion": "1.3",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "Name": "[variables('Domain')]",
+          "OUPath": "[variables('OUpath')]",
+          "User": "[concat(variables('Domain'), '\\', parameters('domainUsername'))]",
+          "Restart": true,
+          "Options": "3"
+        },
+        "protectedSettings": {
+          "Password": "[parameters('domainPassword')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('ServerName'),'/', variables('CustomScript'))]",
+      "location": "westeurope",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('ServerName'))]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions',parameters('ServerName'),variables('JoinDomain'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.7",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [ "[variables('CustomScriptUri')]" ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "powershell.exe -noprofile -ExecutionPolicy bypass -File PostInstallScript.ps1",
+          "storageAccountName": "staiacscript",
+          "storageAccountKey": "[parameters('CustomScriptStorageAccountKey')]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "vmName": {
+      "type": "string",
+      "value": "[parameters('ServerName')]"
+    }
+  }
+}

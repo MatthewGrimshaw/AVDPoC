@@ -1,0 +1,19 @@
+stages:
+  - stage: Build
+    displayName: Build stage
+
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: ubuntu-latest
+
+        steps:
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: infrastructure
+              Contents: "**"
+              TargetFolder: $(Build.ArtifactStagingDirectory)/infrastructure
+
+          - publish: $(Build.ArtifactStagingDirectory)
+            artifact: drop

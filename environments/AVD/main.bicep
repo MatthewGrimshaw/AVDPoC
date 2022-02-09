@@ -44,8 +44,8 @@ param hostPoolFriendlyName string = 'Light-HostPool'
 param workspaceName string = 'Light-Workspace'
 param appGroupFriendlyName string = 'Light-AppGroup'
 
-module backPlane '../../Infrastructure/Bicep/AVDManagementPlane.bicep' = {
-  name: 'backPlane'
+module backPlaneLight '../../Infrastructure/Bicep/AVDManagementPlane.bicep' = {
+  name: 'backPlaneLight'
   scope: resourceGroup(AVDResourceGroup)
   params: {
     location: location
@@ -64,3 +64,54 @@ module backPlane '../../Infrastructure/Bicep/AVDManagementPlane.bicep' = {
   }
 }
 
+param hostPoolNameMedium string = 'Medium-HostPool'
+param hostPoolFriendlyNameMedium string = 'Medium-HostPool'
+param appGroupFriendlyNameMedium string = 'Medium-AppGroup'
+
+
+module backPlaneMedium '../../Infrastructure/Bicep/AVDManagementPlane.bicep' = {
+  name: 'backPlaneMedium'
+  scope: resourceGroup(AVDResourceGroup)
+  params: {
+    location: location
+    workspaceLocation: location
+    hostPoolName: hostPoolNameMedium
+    hostPoolFriendlyName: hostPoolFriendlyNameMedium
+    hostPoolType: hostPoolType
+    appGroupFriendlyName: appGroupFriendlyNameMedium
+    loadBalancerType: loadBalancerType
+    workspaceName: workspaceName
+    personalDesktopAssignmentType: personalDesktopAssignmentType
+    customRdpProperty: customRdpProperty
+    tokenExpirationTime: tokenExpirationTime
+    maxSessionLimit: maxSessionLimit
+    newBuild: newBuild
+  }
+}
+
+
+param hostPoolNameHeavy string = 'Heavy-HostPool'
+param hostPoolFriendlyNameHeavy string = 'Heavy-HostPool'
+param appGroupFriendlyNameHeavy string = 'Heavy-AppGroup'
+param loadbalancerTypeHeavy string = 'Persistent'
+param hostPoolTypeHeavy string = 'Personal'
+
+module backPlaneHeavy '../../Infrastructure/Bicep/AVDManagementPlane.bicep' = {
+  name: 'backPlaneHeavy'
+  scope: resourceGroup(AVDResourceGroup)
+  params: {
+    location: location
+    workspaceLocation: location
+    hostPoolName: hostPoolNameHeavy
+    hostPoolFriendlyName: hostPoolFriendlyNameHeavy
+    hostPoolType: hostPoolTypeHeavy
+    appGroupFriendlyName: appGroupFriendlyNameHeavy
+    loadBalancerType: loadbalancerTypeHeavy
+    workspaceName: workspaceName
+    personalDesktopAssignmentType: personalDesktopAssignmentType
+    customRdpProperty: customRdpProperty
+    tokenExpirationTime: tokenExpirationTime
+    maxSessionLimit: maxSessionLimit
+    newBuild: newBuild
+  }
+}
