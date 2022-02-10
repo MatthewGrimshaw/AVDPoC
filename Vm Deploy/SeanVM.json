@@ -1,28 +1,35 @@
-
-
-
- {
-    "apiVersion": "2018-10-01",
-    "type": "Microsoft.Compute/virtualMachines/extensions",
-    "name": "[concat(parameters('deploymentParameters').vmPrefix, copyIndex(), '-VM', '/', 'dscextension')]",
-    "location": "[parameters('deploymentParameters').location]",
-    "dependsOn": [ "rdsh-domain-join-loop" ],
-    "copy": {
-        "name": "rdsh-dsc-loop",
-        "count": "[parameters('deploymentParameters').count]"
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VMName": { "type": "string" },
+        "location": { "type": "string" },
+        "dscArtifactsLocation": { "type": "string" },
+        "hostPoolName": { "type": "string" },
+        "registrationInfoToken": { "type": "string" }
     },
-    "properties": {
-        "publisher": "Microsoft.Powershell",
-        "type": "DSC",
-        "typeHandlerVersion": "2.73",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-            "modulesUrl": "[parameters('deploymentParameters').dscArtifactsLocation]",
-            "configurationFunction": "Configuration.ps1\\AddSessionHost",
+    "variables": {},
+    "resources": [
+        {
+            "apiVersion": "2018-10-01",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('VMName'), '/Microsoft.Powershell.DSC')]",
+            "location": "[parameters('location')]",
+            "dependsOn": "[concat('Microsoft.Compute/virtualMachines/', parameters('VMName'))]",
             "properties": {
-                "hostPoolName": "[parameters('deploymentParameters').hostPoolName]",
-                "registrationInfoToken": "[parameters('deploymentParameters').registrationInfoToken]"
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.77",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "modulesUrl": "[parameters('dscArtifactsLocation')]",
+                    "configurationFunction": "Configuration.ps1\\AddSessionHost",
+                    "properties": {
+                        "hostPoolName": "[parameters('hostPoolName')]",
+                        "registrationInfoToken": "[parameters('registrationInfoToken')]"
+                    }
+                }
             }
         }
-    }
+    ]
 }
