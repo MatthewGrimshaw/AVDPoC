@@ -1,6 +1,6 @@
-$subscriptionID = ''
-$artifactsStorageAccount = ''
-
+$subscriptionID = 'bf378636-b0ba-4651-beab-a00a1bf2c984'
+$artifactsStorageAccount = 'staisinfraavd'
+$resourceGroupName = 'rg-infra-avd-management'
 
 
 az login
@@ -17,7 +17,7 @@ $artifactsStorageKey = az storage account keys list `
 ## Get SAS Key for the Storage Account 
 $SasToken =                    az storage container generate-sas `
                             --account-name $artifactsStorageAccount `
-                            --name $params.parameters.deploymentParameters.value.artifactsContainerName `
+                            --name 'avd-dsc' `
                             --account-key $artifactsStorageKey `
                             --permissions w `
                             --output tsv
@@ -30,7 +30,7 @@ $connectionString = az storage account show-connection-string `
 
 
 #Change Location
-Set-Location '.\AVDPoC\Vm Deploy'
+Set-Location '.\Vm Deploy'
 
 #Create zip archive for Deploy artifacts
 Compress-Archive -Path .\Configuration\DeployAgent\* -DestinationPath .\Configuration\DeployAgent.zip -Force
@@ -44,9 +44,9 @@ Compress-Archive -Path .\Configuration\* -DestinationPath .\Configuration.zip -F
 
  ## upload artifacts to blob storage
  az storage blob upload `
-    --name $artifactToUpload.name `
-    --container-name ($params.parameters.deploymentParameters.value.artifactsContainerName).ToLower() `
-    --file $artifactToUpload.Fullname `
+    --name 'Configuration.zip' `
+    --container-name 'avd-dsc' `
+    --file 'Configuration.zip' `
     --account-name $artifactsStorageAccount `
     --connection-string $connectionString `
     --sas-token $SasToken
@@ -57,8 +57,8 @@ $date = $date.Replace(".",":")
 
 $dscArtifactsLocation =     az storage blob generate-sas `
                             --account-name $artifactsStorageAccount `
-                            --container-name ($params.parameters.deploymentParameters.value.artifactsContainerName).ToLower() `
-                            --name $params.parameters.deploymentParameters.value.dscArtifactsName `
+                            --container-name 'avd-dsc' `
+                            --name 'Configuration.zip' `
                             --account-key $artifactsStorageKey `
                             --permissions rw `
                             --expiry $date `
