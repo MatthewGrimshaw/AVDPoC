@@ -67,3 +67,17 @@ $dscArtifactsLocation =     az storage blob generate-sas `
 
 
 write-host $dscArtifactsLocation
+
+
+az deployment group create `
+--resource-group 'rg-infra-avd-VM' `
+--name 'vmDeployment' `
+--template-file "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\template.json" `
+--parameters "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\parameters2.json"
+
+
+New-AzResourceGroupDeployment `
+  -Name "ExampleDeployment" `
+  -ResourceGroupName 'rg-infra-avd-VM' `
+  -TemplateFile "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\template.json" `
+  -TemplateParameterFile "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\parameters2.json"
