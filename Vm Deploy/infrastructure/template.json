@@ -18,7 +18,8 @@
         "Windows Server 2016",
         "Windows 10 Enterprise",
         "Windows 10 Enterprise Multi-Session",
-        "Windows Server 2022 Gen2"
+        "Windows Server 2022 Gen2",
+        "Windows 10 M365 Enterprise Multi-Session"
       ],
       "metadata": {
         "description": "Select OS for your Virtual Machine"
@@ -120,6 +121,12 @@
         "offer": "WindowsServer",
         "sku": "2022-datacenter-azure-edition",
         "version": "latest"
+      },
+      "Windows 10 M365 Enterprise Multi-Session": {
+        "publisher": "microsoftwindowsdesktop",
+        "offer": "office-365",
+        "sku": "win10-21h2-avd-m365-g2",
+        "version": "latest"
       }
     },
     "licenseType": {
@@ -128,7 +135,8 @@
       "Windows 10 Enterprise": "Windows_Client",
       "Windows 10 Enterprise Multi-Session": "Windows_Client",
       // "Windows Server 2019 Data Science Virtual Machine": "Windows_Server",
-      "Windows Server 2022 Gen2": "Windows_Server"
+      "Windows Server 2022 Gen2": "Windows_Server",
+      "Windows 10 M365 Enterprise Multi-Session": "Windows_Client"
     },
     "vmSize": {
       "2vCPU": "Standard_D2s_v3",
@@ -143,7 +151,7 @@
     "Domain": "CCTA.dk",
     "OUpath": "OU=Azure,OU=Infrastruktur,OU=Servere,DC=ccta,DC=dk",
     "CustomScript": "CustomScript",
-    "CustomScriptUri": "https://staiacscript.blob.core.windows.net/internal-ccta/PostInstallScript.ps1",
+    "CustomScriptUri": "https://staisinfraavd.blob.core.windows.net/avd-postinstall/PostInstallScriptAVD.ps1",
     "location": "westeurope"
   },
   "resources": [
@@ -264,8 +272,8 @@
           "fileUris": [ "[variables('CustomScriptUri')]" ]
         },
         "protectedSettings": {
-          "commandToExecute": "powershell.exe -noprofile -ExecutionPolicy bypass -File PostInstallScript.ps1",
-          "storageAccountName": "staiacscript",
+          "commandToExecute": "powershell.exe -noprofile -ExecutionPolicy bypass -File PostInstallScriptAVD.ps1",
+          "storageAccountName": "staisinfraavd",
           "storageAccountKey": "[parameters('CustomScriptStorageAccountKey')]"
         }
       }

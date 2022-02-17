@@ -3,9 +3,9 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "hostPoolName": {
-      "value": "Light-Hostpool"
+      "value": "Heavy-Hostpool"
     },
-    "domainUsername": {
+    "DomainUsername": {
       "reference": {
         "keyVault": {
           "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
@@ -48,22 +48,27 @@
     "CustomScriptStorageAccountKey": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/758c2304-30f5-4008-bd28-9c4b92963c3b/resourceGroups/RG-SKATInfra-01/providers/Microsoft.KeyVault/vaults/Vault-Infra01"
+          "id": "/subscriptions/bf378636-b0ba-4651-beab-a00a1bf2c984/resourceGroups/rg-infra-avd-management/providers/Microsoft.KeyVault/vaults/vault-infra-avd"
         },
         "secretName": "ADO-WinCustomScriptKey"
       }
     },
     "dscArtifactsLocation": {
-      "value": "https://staisinfraavd.blob.core.windows.net/avd-dsc/Configuration.zip?se=2022-02-14T14%3A07Z&sp=rw&sv=2018-11-09&sr=b&sig=XJK2LQ8UAhYj00CAd2W5qxTb2dtioAEPgcZ8e63%2BsGw%3D"
+      "value": "https://staisinfraavd.blob.core.windows.net/avd-dsc/Configuration.zip?se=2022-02-17T14%3A36Z&sp=rw&sv=2018-11-09&sr=b&sig=KqjPyl8UMWy1LvTRmkYVcMn0exKeN9ky4C71PHvOkGA%3D"
     },
     "registrationInfoToken": {
-      "value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkZDMTBFOUQzNUQ4MEFCMjQyMTM2MTJBMDIwQjA3Q0U2Q0UxODRGMDAiLCJ0eXAiOiJKV1QifQ.eyJSZWdpc3RyYXRpb25JZCI6ImEwMTI4MTg2LTQyN2YtNDMyMC1hMTNlLTAyYjkwODQ3N2RiOSIsIkJyb2tlclVyaSI6Imh0dHBzOi8vcmRicm9rZXItZy1ldS1yMC53dmQubWljcm9zb2Z0LmNvbS8iLCJEaWFnbm9zdGljc1VyaSI6Imh0dHBzOi8vcmRkaWFnbm9zdGljcy1nLWV1LXIwLnd2ZC5taWNyb3NvZnQuY29tLyIsIkVuZHBvaW50UG9vbElkIjoiN2IzNzgwZWYtMWE1NS00OGQ0LTk2YjMtYzg5YmUyMjg3MjFhIiwiR2xvYmFsQnJva2VyVXJpIjoiaHR0cHM6Ly9yZGJyb2tlci53dmQubWljcm9zb2Z0LmNvbS8iLCJHZW9ncmFwaHkiOiJFVSIsIkdsb2JhbEJyb2tlclJlc291cmNlSWRVcmkiOiJodHRwczovL3JkYnJva2VyLnd2ZC5taWNyb3NvZnQuY29tLyIsIkJyb2tlclJlc291cmNlSWRVcmkiOiJodHRwczovL3JkYnJva2VyLWctZXUtcjAud3ZkLm1pY3Jvc29mdC5jb20vIiwiRGlhZ25vc3RpY3NSZXNvdXJjZUlkVXJpIjoiaHR0cHM6Ly9yZGRpYWdub3N0aWNzLWctZXUtcjAud3ZkLm1pY3Jvc29mdC5jb20vIiwibmJmIjoxNjQ0NDA3ODMzLCJleHAiOjE2NDUxODU0MjksImlzcyI6IlJESW5mcmFUb2tlbk1hbmFnZXIiLCJhdWQiOiJSRG1pIn0.U6pIhpMstUp5lVJC_dj1WXLg1aMeUIVeVsRSXQpGZjh6C4MYQDRcThAqHHYXkkGtxCPPhudjM6p0o26jfryv4mFKcmDfCEeuHTLvbWatswDc1goyqy-qPlnTRjImiBafWXIvNTOQPJVby3T8eVmAvbc1fw2SRaenTBxqo0M8ir_xTX4_Z0ytuh39iSjIxeHFWSju1cXAv5XvVVbspuuSYc_hlAEDZzVbse7Xb2YANGfHkZXXoUxEgbITKhQZYhHfgSXg-2ujvx4zevbK1TBenrMrDdRFxmajrg0377koYs64vLoLPKy-HoKnGi1GO1TfB-81Yys8XWafGmMhAX7G0g"
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/bf378636-b0ba-4651-beab-a00a1bf2c984/resourceGroups/rg-infra-avd-management/providers/Microsoft.KeyVault/vaults/vault-infra-avd"
+        },
+        "secretName": "RegistrationTokenInfoHeavy"
+      }
     },
     "ServerName": {
-      "value": "AVDLight"
+      "value": "AVDHeavy02"
     },
     "OperatingSystem": {
-      "value": "Windows 10 Enterprise Multi-Session"
+      "value": "Windows 10 M365 Enterprise Multi-Session"
     },
     "Size": {
       "value": "4vCPU"

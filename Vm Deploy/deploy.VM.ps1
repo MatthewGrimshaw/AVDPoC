@@ -80,4 +80,4 @@ New-AzResourceGroupDeployment `
   -Name "ExampleDeployment" `
   -ResourceGroupName 'rg-infra-avd-VM' `
   -TemplateFile "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\template.json" `
-  -TemplateParameterFile "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\parameters2.json"
+  -TemplateParameterFile "C:\Users\w29805\OneDrive - Skatteministeriet\Local VSC Projects\AVDPoC\Vm Deploy\infrastructure\parameters.json"
